@@ -1,0 +1,11 @@
+@use 'resets';
+@use 'variables';
+@use 'texts';
+@forward 'background';
+
+.jap-name {
+  @include texts.font(japanese);
+  writing-mode: vertical-lr;
+  pointer-events: none;
+}
+

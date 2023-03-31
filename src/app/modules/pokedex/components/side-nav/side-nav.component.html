@@ -1,0 +1,19 @@
+<ul>
+  <li>
+    <button type="button" title="prevPokemon" (click)="prevPokemon()" [disabled]="no_back">
+      <ng-icon name="cssPlayTrackPrev" [size]="'24px'"></ng-icon>
+    </button>
+  </li>
+  <li *ngFor="let pokemon of items$ | async" [ngClass]="{active: pokemon.id == selected }">
+    <button type="button" type="button" title="Select {{pokemon.id}}" (click)="onSelected(pokemon.id)">
+      <img src="{{'pkmn_icon_path' | env}}{{pokemon.id}}.png" alt="">
+      <span>#{{pokemon.id | number: '3.0-0'}}</span>
+      <p>{{pokemon.name | titlecase}}</p>
+    </button>
+  </li>
+  <li>
+    <button type="button" title="nextPokemon" (click)="nextPokemon()" [disabled]="no_more">
+      <ng-icon name="cssPlayTrackNext" [size]="'24px'" ></ng-icon>
+    </button>
+  </li>
+</ul>

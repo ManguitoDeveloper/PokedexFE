@@ -1,0 +1,55 @@
+<div class="container" *ngIf="previewPokemon$ && pokemonList$">
+  <app-side-nav [items$]="pokemonList$" [no_back]="page_info.offset == 0" [no_more]="currentPkmnInfo.id >= page_info.max - 10" (goPrev)="prevPokemon()" (goNext)="nextPokemon()" (selectPokemon)="onPokemonSelected($event)" [selected]="currentPkmnInfo.id">
+  </app-side-nav>
+  <section class="pkmn-content">
+    <div class="first-section">
+      <span class="pkmn-id">#{{(previewPokemon$ | async)?.id | number: '3.0-0'}}</span>
+      <p class="pkmn-name">{{(previewPokemon$ | async)?.name | titlecase}}</p>
+      <p class="pkmn-genera">{{(previewPokemon$ | async)?.genera | titlecase}}</p>
+    </div>
+    <div class="second-section">
+      <div class="pkmn-figure">
+        <object data="../../../../../assets/img/pokeball.svg" class="pokeball"></object>
+        <p class="jap-name">{{(previewPokemon$ | async)?.jap_name }}</p>
+        <img src="{{'pkmn_img_path' | env}}{{currentPkmnInfo.id}}.png" class="pkmn-img" alt="{{(previewPokemon$ | async)?.name | titlecase}}">
+      </div>
+      <div class="pkmn-text">
+        <p><span>Height</span>: {{(previewPokemon$ | async)?.height}}m</p>
+        <p><span>Weigth</span>: {{(previewPokemon$ | async)?.weight}}kg</p>
+        <p><span>Color</span>: {{(previewPokemon$ | async)?.color}}</p>
+        <p><span>Region</span>: {{(previewPokemon$ | async)?.region}}</p>
+      </div>
+    </div>
+    <div class="third-section">
+      <div class="pkmn-types">
+        <img *ngFor="let type of (previewPokemon$ | async)?.types" src="../../../../../assets/img/types/{{type}}.svg" alt="{{type | titlecase}}">
+      </div>
+      <p class="pkmn-flavor">{{(previewPokemon$ | async)?.flavor}}</p>
+      <div class="pkmn-stats">
+        <div class="pkmn-graph">
+          <app-stat-chart [stats]="pkmn_stats"></app-stat-chart>
+        </div>
+        <table class="pkmn-stat-list">
+          <tbody>
+            <tr *ngFor="let stat of (previewPokemon$ | async)?.stats">
+              <td>{{stat.name | titlecase}}</td>
+              <td>{{stat.value}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>Total</td>
+              <td>{{totalStats}}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <p class="pkmn-details">
+        <a role="button" routerLink="{{currentPkmnInfo.id}}">
+          More details
+          <ng-icon class="icon" name="cssArrowRight" [size]="'24px'"></ng-icon>
+        </a>
+      </p>
+    </div>
+  </section>
+</div>

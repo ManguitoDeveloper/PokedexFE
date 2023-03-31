@@ -1,0 +1,21 @@
+// Custom Breakpoints
+$breakpoints: tablet, desktop;
+
+@mixin device($size) {
+    // @if $size == 'mobile'{
+    //     // @media (max-width: 428px) {
+    //     @media (max-width: 768px) {
+    //         @content;
+    //     }
+    // }
+    @if $size == 'tablet'{
+        @media (min-width: 768px) {
+            @content;
+        }
+    }
+    @else if $size == 'desktop'{
+        @media (min-width: 1020px) {
+            @content;
+        }
+    }
+}

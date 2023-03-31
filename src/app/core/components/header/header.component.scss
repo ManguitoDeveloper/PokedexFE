@@ -1,0 +1,8 @@
+@use 'devices' as *;
+
+header {
+  height: 40px;
+  @include device(nth($breakpoints, 1)) {
+    height: 108px;
+  }
+}

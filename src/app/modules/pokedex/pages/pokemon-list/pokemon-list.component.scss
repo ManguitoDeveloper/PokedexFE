@@ -1,0 +1,208 @@
+@use 'variables' as *;
+@use 'mixins';
+@use 'texts' as *;
+@use 'devices' as *;
+@use 'animations';
+
+.container {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: nth($spacing, 3);
+  app-side-nav {
+    width: 100%;
+    grid-row: 1;
+  }
+  .pkmn {
+    &-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+      column-gap: nth($spacing, 5 );
+      row-gap: nth($spacing, 3 );
+      .first-section {
+        .pkmn {
+          &-id,
+          &-name {
+            font-weight: 700;
+          }
+          &-id {
+            font-size: nth($fontSizes, 3);
+          }
+          &-name {
+            font-size: nth($fontSizes, 4);
+            line-height: 16px;
+          }
+          &-genera {
+            font-size: nth($fontSizes, 2);
+          }
+        }
+      }
+      .second-section {
+        .jap-name {
+          position: absolute;
+          opacity: .6;
+          font-size: nth($fontSizes, 7);
+          top: 50%;
+          transform: translateY(-50%);
+          white-space: nowrap;
+        }
+        .pkmn {
+          &-img {
+            width: 250px;
+            position: absolute;
+            bottom: -10px;
+          }
+          &-figure {
+            position: relative;
+            height: 320px;
+            pointer-events:none;
+            .pokeball {
+              filter: invert(100%);
+              position: absolute;
+              left: 70px;
+              width: 250px;
+              opacity: .2;
+              @include animations.rotate(10s);
+            }
+          }
+          &-text {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            margin-top: nth($spacing, 3 );
+          }
+        }
+      }
+      .third-section {
+        .pkmn {
+          &-types {
+            display: flex;
+            gap: nth($spacing, 3 );
+            position: absolute;
+            right: 0px;
+            top: 123px;
+            img {
+              width: 50px;
+            }
+          }
+          &-details {
+            display: flex;
+            flex-direction: row-reverse;
+            a {
+              width: fit-content;
+              display: flex;
+              column-gap: nth($spacing, 4);
+              transition: all .2s ease;
+            }
+          }
+          &-flavor {
+            text-align: justify;
+            text-justify: inter-word;
+            @include mixins.margin-y(nth($spacing,4));
+          }
+          &-stats {
+            @include mixins.flexbox(column);
+            @include mixins.margin-y(nth($spacing, 4));
+            row-gap: nth($spacing,4);
+          }
+          &-graph {
+            width: 100%;
+            max-width: 240px;
+            aspect-ratio: 1;
+          }
+          &-stat-list {
+            width: 100%;
+            border-spacing: 0;
+            tbody {
+              tr {
+                &:nth-last-child(1) {
+                  td {
+                    border-bottom: solid 1px rgba(white, .4);
+                  }
+                }
+                &:nth-of-type(2n + 1) {
+                  td {
+                    background-color: rgba(white, .1);
+                  }
+                }
+              }
+            }
+            tfoot {
+              background-color: rgba(black, .05);
+            }
+            td {
+              @include mixins.padding-x(nth($spacing,3))
+            }
+            td:nth-last-child(1) {
+              border-left: solid 1px rgba(white, .4);
+            }
+          }
+        }
+      }
+      @include device(nth($breakpoints, 1)) {
+        grid-template-columns: minmax(450px,1fr) 1fr;
+        .first-section {
+          grid-column: span 2;
+          .pkmn {
+            &-id {
+              font-size: nth($fontSizes, 4);
+            }
+            &-name {
+              font-size: nth($fontSizes, 6);
+              line-height: 30px;
+            }
+            &-genera {
+              font-size: nth($fontSizes, 3);
+            }
+          }
+        }
+        .second-section {
+          .jap-name {
+            font-size: nth($fontSizes, 8);
+            left: 30px;
+          }
+          .pkmn {
+            &-img {
+              width: 340px;
+              bottom: -20px;
+              left: 70px;
+            }
+            &-figure {
+              height: 340px;
+              .pokeball {
+                left: 150px;
+                width: 300px;
+              }
+            }
+            &-text {
+              margin-top: nth($spacing, 3 );
+            }
+          }
+        }
+        .third-section {
+          .pkmn {
+            &-types {
+              position: relative;
+              top: 0;
+              img {
+                width: 50px;
+              }
+            }
+            &-stats {
+              @include mixins.flexbox(row, space-between, initial);
+              column-gap: nth($spacing,4)
+            }
+          }
+        }
+      }
+    }
+  }
+  @include device(nth($breakpoints, 1)) {
+    grid-template-columns: 1fr 220px;
+    grid-template-rows: 1fr;
+    app-side-nav {
+      grid-column: 2;
+    }
+    column-gap: nth($spacing, 6 );
+  }
+}

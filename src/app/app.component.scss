@@ -1,0 +1,14 @@
+@use 'variables';
+@use 'mixins' as *;
+@use 'devices' as *;
+
+.wrapper {
+  height: calc(100vh - 40px - 20px);
+  @include hideScrollbar;
+  @include padding-x(nth(variables.$spacing,4));
+  overflow-y: scroll;
+  @include device(nth($breakpoints, 1)){
+    height: calc(100vh - 108px - 40px);
+    @include padding-x(nth(variables.$spacing,6));
+  };
+}

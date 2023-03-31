@@ -1,0 +1,8 @@
+@use 'devices' as *;
+
+footer {
+  height: 20px;
+  @include device(nth($breakpoints, 1)) {
+    height: 40px;
+  }
+}
