@@ -142,7 +142,6 @@ export class PokemonListComponent implements OnInit {
     document.body.classList.add('bodybg-' + type);
   }
 
-
   pkmnStatsToArray(stats: pokemonStat[]): number[] {
     const result: number[] = [];
     stats.map( (stat: pokemonStat) => result.push(stat.value) );

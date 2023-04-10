@@ -93,6 +93,11 @@
               display: flex;
               column-gap: nth($spacing, 4);
               transition: all .2s ease;
+              &:hover {
+                .icon {
+                  @include animations.bounce(1s);
+              }
+              }
             }
           }
           &-flavor {
@@ -206,3 +211,4 @@
     column-gap: nth($spacing, 6 );
   }
 }
+

@@ -4,7 +4,7 @@ import { Apollo } from 'apollo-angular';
 import { paginator } from '@models/paginator-variables.interface';
 import { ListedPokemon } from '@models/listed-pokemon.interface';
 //Queries
-import { GET_POKEMON_LIST, GET_POKEMON } from '../gql/pokemon-queries';
+import { GET_POKEMON_LIST, GET_POKEMON, GET_DETAILED_POKEMON } from '../gql/pokemon-queries';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +24,13 @@ export class PokemonService {
   getPokemon( params: any): any {
     return this.apollo.watchQuery<ListedPokemon>({
       query: GET_POKEMON,
+      variables: params,
+    }).valueChanges
+  }
+
+  getDetailedPokemon( params: any): any {
+    return this.apollo.watchQuery<any>({
+      query: GET_DETAILED_POKEMON,
       variables: params,
     }).valueChanges
   }

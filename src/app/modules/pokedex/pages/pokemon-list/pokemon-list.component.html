@@ -22,8 +22,10 @@
     </div>
     <div class="third-section">
       <div class="pkmn-types">
-        <img *ngFor="let type of (previewPokemon$ | async)?.types" src="../../../../../assets/img/types/{{type}}.svg" alt="{{type | titlecase}}">
-      </div>
+        <a *ngFor="let type of (previewPokemon$ | async)?.types" role="button" title="{{type | titlecase}}">
+          <img  src="../../../../../assets/img/types/{{type}}.svg" alt="{{type | titlecase}}: Credits to https://www.deviantart.com/lugia-sea/art/Pokemon-Type-Icons-Vector-869706864">
+        </a>
+        </div>
       <p class="pkmn-flavor">{{(previewPokemon$ | async)?.flavor}}</p>
       <div class="pkmn-stats">
         <div class="pkmn-graph">
