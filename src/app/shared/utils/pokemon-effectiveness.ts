@@ -1,4 +1,12 @@
-const type_effectiveness = {
+interface Debilities {
+  [key: string]: Type
+}
+
+interface Type {
+  [key: string]: number
+}
+
+const type_effectiveness: Debilities = {
   normal: {
     normal: 1,
     fighting: 1,
@@ -367,7 +375,6 @@ export const calcDebilities = (targets: string[]): any[] => {
   for(let type in type_effectiveness) {
     let x = 1
     targets.map((target: string) => {
-    //@ts-ignore
       x *= type_effectiveness[type][target]
     });
     res.push({
