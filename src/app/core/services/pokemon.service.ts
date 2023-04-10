@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 //Custom Types
 import { paginator } from '@models/paginator-variables.interface';
-import { ListedPokemon } from '@models/listed-pokemon.interface';
+import { ListedPokemon, PreviewPokemon } from '@models/listed-pokemon.interface';
 //Queries
 import { GET_POKEMON_LIST, GET_POKEMON, GET_DETAILED_POKEMON } from '../gql/pokemon-queries';
 
@@ -22,7 +22,7 @@ export class PokemonService {
   }
 
   getPokemon( params: any): any {
-    return this.apollo.watchQuery<ListedPokemon>({
+    return this.apollo.watchQuery<PreviewPokemon>({
       query: GET_POKEMON,
       variables: params,
     }).valueChanges

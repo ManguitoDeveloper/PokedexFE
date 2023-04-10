@@ -7,12 +7,12 @@ export interface ListedPokemon {
   species: Pokemon[];
 }
 
-export interface pokemonStat {
+export interface PokemonStat {
   name: string;
   value: number;
 }
 
-export interface previewPokemon {
+export interface PreviewPokemon {
   id?: number;
   name?: string;
   genera?: string;
@@ -23,5 +23,5 @@ export interface previewPokemon {
   region?: string;
   flavor?: string;
   types: string[];
-  stats: pokemonStat[];
+  stats: PokemonStat[];
 }

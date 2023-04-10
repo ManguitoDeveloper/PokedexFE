@@ -2,7 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { PokemonService } from '@services/pokemon.service';
 //models
 import { paginator, previewInfo } from '@models/paginator-variables.interface';
-import { ListedPokemon, pokemonStat, previewPokemon } from '@models/listed-pokemon.interface';
+import { ListedPokemon, PokemonStat, PreviewPokemon } from '@models/listed-pokemon.interface';
 import { BehaviorSubject, take, tap } from 'rxjs';
 //environment
 import { environment } from '@environments/environment';
@@ -17,7 +17,7 @@ export class PokemonListComponent implements OnInit {
   private pokemonListSubject = new BehaviorSubject<ListedPokemon['species'] | null>(null);
   pokemonList$ = this.pokemonListSubject.asObservable();
 
-  private previewPokemonSubject = new BehaviorSubject< previewPokemon | null>(null);
+  private previewPokemonSubject = new BehaviorSubject<PreviewPokemon | null>(null);
   previewPokemon$ = this.previewPokemonSubject.asObservable();
 
   page_info: paginator = {
@@ -59,7 +59,7 @@ export class PokemonListComponent implements OnInit {
       take(1),
       tap( ({ data }) => {
         const { res } = data;
-        const pokemon: previewPokemon = {
+        const pokemon: PreviewPokemon = {
           id: undefined,
           name: undefined,
           genera: undefined,
@@ -142,9 +142,9 @@ export class PokemonListComponent implements OnInit {
     document.body.classList.add('bodybg-' + type);
   }
 
-  pkmnStatsToArray(stats: pokemonStat[]): number[] {
+  pkmnStatsToArray(stats: PokemonStat[]): number[] {
     const result: number[] = [];
-    stats.map( (stat: pokemonStat) => result.push(stat.value) );
+    stats.map( (stat: PokemonStat) => result.push(stat.value) );
     this.totalStats = result.reduce((a, b) => a + b, 0);
     return result;
   }

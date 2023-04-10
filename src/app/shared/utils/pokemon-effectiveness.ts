@@ -1,9 +1,14 @@
 interface Debilities {
-  [key: string]: Type
+  [key: string]: Type;
 }
 
 interface Type {
-  [key: string]: number
+  [key: string]: number;
+}
+
+interface Debility {
+  type: string;
+  value: number;
 }
 
 const type_effectiveness: Debilities = {
@@ -25,7 +30,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 1,
     dark: 1,
-    fairy: 1
+    fairy: 1,
   },
   fighting: {
     normal: 2,
@@ -45,7 +50,7 @@ const type_effectiveness: Debilities = {
     ice: 2,
     dragon: 1,
     dark: 2,
-    fairy: 0.5
+    fairy: 0.5,
   },
   flying: {
     normal: 1,
@@ -65,7 +70,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 1,
     dark: 1,
-    fairy: 1
+    fairy: 1,
   },
   poison: {
     normal: 1,
@@ -85,7 +90,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 1,
     dark: 1,
-    fairy: 2
+    fairy: 2,
   },
   ground: {
     normal: 1,
@@ -105,7 +110,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 1,
     dark: 1,
-    fairy: 1
+    fairy: 1,
   },
   rock: {
     normal: 1,
@@ -125,7 +130,7 @@ const type_effectiveness: Debilities = {
     ice: 2,
     dragon: 1,
     dark: 1,
-    fairy: 1
+    fairy: 1,
   },
   bug: {
     normal: 1,
@@ -145,7 +150,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 1,
     dark: 2,
-    fairy: 0.5
+    fairy: 0.5,
   },
   ghost: {
     normal: 0,
@@ -165,7 +170,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 1,
     dark: 0.5,
-    fairy: 1
+    fairy: 1,
   },
   steel: {
     normal: 1,
@@ -185,7 +190,7 @@ const type_effectiveness: Debilities = {
     ice: 2,
     dragon: 1,
     dark: 1,
-    fairy: 2
+    fairy: 2,
   },
   fire: {
     normal: 1,
@@ -205,7 +210,7 @@ const type_effectiveness: Debilities = {
     ice: 2,
     dragon: 0.5,
     dark: 1,
-    fairy: 1
+    fairy: 1,
   },
   water: {
     normal: 1,
@@ -225,7 +230,7 @@ const type_effectiveness: Debilities = {
     ice: 2,
     dragon: 0.5,
     dark: 1,
-    fairy: 1
+    fairy: 1,
   },
   grass: {
     normal: 1,
@@ -245,7 +250,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 0.5,
     dark: 1,
-    fairy: 1
+    fairy: 1,
   },
   electric: {
     normal: 1,
@@ -265,7 +270,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 0.5,
     dark: 1,
-    fairy: 1
+    fairy: 1,
   },
   psychic: {
     normal: 1,
@@ -285,7 +290,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 1,
     dark: 0,
-    fairy: 1
+    fairy: 1,
   },
   ice: {
     normal: 1,
@@ -305,7 +310,7 @@ const type_effectiveness: Debilities = {
     ice: 0.5,
     dragon: 2,
     dark: 1,
-    fairy: 1
+    fairy: 1,
   },
   dragon: {
     normal: 1,
@@ -325,7 +330,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 2,
     dark: 1,
-    fairy: 0
+    fairy: 0,
   },
   dark: {
     normal: 1,
@@ -345,7 +350,7 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 1,
     dark: 0.5,
-    fairy: 0.5
+    fairy: 0.5,
   },
   fairy: {
     normal: 1,
@@ -365,23 +370,21 @@ const type_effectiveness: Debilities = {
     ice: 1,
     dragon: 2,
     dark: 2,
-    fairy: 1
+    fairy: 1,
   },
 };
 
-export const calcDebilities = (targets: string[]): any[] => {
-  const res: any[] = []
-
-  for(let type in type_effectiveness) {
-    let x = 1
+export const calcDebilities = (targets: string[]): Debility[] => {
+  const debilities: Debility[] = [];
+  for (let type in type_effectiveness) {
+    let dmg_factor = 1;
     targets.map((target: string) => {
-      x *= type_effectiveness[type][target]
+      dmg_factor *= type_effectiveness[type][target];
     });
-    res.push({
+    debilities.push({
       type: type,
-      value: x
-    })
+      value: dmg_factor,
+    });
   }
-  return res
+  return debilities;
 };
-

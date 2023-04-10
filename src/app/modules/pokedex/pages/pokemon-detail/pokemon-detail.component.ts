@@ -159,8 +159,6 @@ export class PokemonDetailComponent {
         }
         detailedPokemon.specy = specy;
         detailedPokemon.pokemon = pokemonArr;
-
-        console.log(detailedPokemon)
         this.pokemonSubject.next(detailedPokemon)
         this.switchBgByType(data.pokemon[0].types[0].type.name)
       })
