@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PokemonService } from '@app/core/services/pokemon.service';
 import { BehaviorSubject, take, tap } from 'rxjs';
-
 //Models
 import { DetailedPokemon, Specy, Pokemon } from '@models/detailed-pokemon.interface';
 //Utils
 import { calcDebilities } from '@shared/utils/pokemon-effectiveness';
+import { switchBgByType } from '@shared/utils/pokedex-bg';
+
 @Component({
   selector: 'app-pokemon-detail',
   templateUrl: './pokemon-detail.component.html',
@@ -14,7 +15,7 @@ import { calcDebilities } from '@shared/utils/pokemon-effectiveness';
 })
 export class PokemonDetailComponent {
 
-  private pokemonSubject = new BehaviorSubject<any | null>(null);
+  private pokemonSubject = new BehaviorSubject<DetailedPokemon | null>(null);
   pokemon$ = this.pokemonSubject.asObservable();
 
   currentPokemonId!: any;
@@ -160,15 +161,9 @@ export class PokemonDetailComponent {
         detailedPokemon.specy = specy;
         detailedPokemon.pokemon = pokemonArr;
         this.pokemonSubject.next(detailedPokemon)
-        this.switchBgByType(data.pokemon[0].types[0].type.name)
+        switchBgByType(data.pokemon[0].types[0].type.name)
       })
     ).subscribe();
-  }
-
-
-  switchBgByType(type: string): void {
-    document.body.className = '';
-    document.body.classList.add('bodybg-' + type);
   }
 
 }

@@ -6,6 +6,8 @@ import { ListedPokemon, PokemonStat, PreviewPokemon } from '@models/listed-pokem
 import { BehaviorSubject, take, tap } from 'rxjs';
 //environment
 import { environment } from '@environments/environment';
+//utils
+import { switchBgByType } from '@shared/utils/pokedex-bg';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -108,7 +110,7 @@ export class PokemonListComponent implements OnInit {
             break;
         }
         this.previewPokemonSubject.next(pokemon)
-        this.switchBgByType(pokemon.types[0]);
+        switchBgByType(pokemon.types[0]);
         this.pkmn_stats = this.pkmnStatsToArray(pokemon.stats);
       })
     ).subscribe();
@@ -135,11 +137,6 @@ export class PokemonListComponent implements OnInit {
     }
     this.listPokemon(this.page_info)
     this.loadPokemon(this.currentPkmnInfo)
-  }
-
-  switchBgByType(type: string): void {
-    document.body.className = '';
-    document.body.classList.add('bodybg-' + type);
   }
 
   pkmnStatsToArray(stats: PokemonStat[]): number[] {
