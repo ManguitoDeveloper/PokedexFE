@@ -64,6 +64,7 @@
     height: 100%;
     overflow: hidden;
     pointer-events: none;
+    z-index: -9;
 
     li {
       position: absolute;

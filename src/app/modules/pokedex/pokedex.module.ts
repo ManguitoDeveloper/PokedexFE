@@ -10,7 +10,7 @@ import { PokemonDetailComponent } from './pages/pokemon-detail/pokemon-detail.co
 import { SideNavComponent } from './components/side-nav/side-nav.component';
 
 import { NgIconsModule } from '@ng-icons/core';
-import { cssPlayTrackPrev, cssPlayTrackNext, cssArrowRight } from '@ng-icons/css.gg';
+import { cssPlayTrackPrev, cssPlayTrackNext, cssArrowRight, cssArrowUp, cssArrowDown, cssGenderMale, cssGenderFemale } from '@ng-icons/css.gg';
 
 @NgModule({
   declarations: [
@@ -24,7 +24,7 @@ import { cssPlayTrackPrev, cssPlayTrackNext, cssArrowRight } from '@ng-icons/css
     SharedModule,
     RouterModule,
     PokedexRoutingModule,
-    NgIconsModule.withIcons({ cssPlayTrackPrev, cssPlayTrackNext, cssArrowRight }),
+    NgIconsModule.withIcons({ cssPlayTrackPrev, cssPlayTrackNext, cssArrowRight, cssArrowUp, cssArrowDown, cssGenderMale, cssGenderFemale }),
   ]
 })
 export class PokedexModule { }

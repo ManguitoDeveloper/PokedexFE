@@ -1,24 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PokemonService } from '@app/core/services/pokemon.service';
 import { BehaviorSubject, take, tap } from 'rxjs';
 //Models
-import { DetailedPokemon, Specy, Pokemon } from '@models/detailed-pokemon.interface';
+import { DetailedPokemon, Specy, Pokemon, Ability, Stage } from '@models/detailed-pokemon.interface';
 //Utils
 import { calcDebilities } from '@shared/utils/pokemon-effectiveness';
 import { switchBgByType } from '@shared/utils/pokedex-bg';
+import { pkmnStatsToArray, formatEvolutionChain } from '@shared/utils/pokemon-utils';
 
 @Component({
   selector: 'app-pokemon-detail',
   templateUrl: './pokemon-detail.component.html',
   styleUrls: ['./pokemon-detail.component.scss']
 })
-export class PokemonDetailComponent {
+export class PokemonDetailComponent implements OnInit, AfterViewInit {
 
   private pokemonSubject = new BehaviorSubject<DetailedPokemon | null>(null);
   pokemon$ = this.pokemonSubject.asObservable();
-
-  currentPokemonId!: any;
+  currentSpeciesId!: string | null;
+  currentPokemonIndex = 0;
+  pokemon: DetailedPokemon = {
+    specy: undefined,
+    pokemon: undefined
+  };
+  pkmn_stats!: number[];
+  totalStats!: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,10 +36,14 @@ export class PokemonDetailComponent {
 
     this.route.paramMap.subscribe(
       paraMap => {
-        this.currentPokemonId = paraMap.get('id');
+        this.currentSpeciesId = paraMap.get('id');
+        this.loadPokemon({id: this.currentSpeciesId, lang: 9})
       }
     )
-    this.loadPokemon({id: this.currentPokemonId, lang: 9})
+  }
+
+  ngAfterViewInit(): void {
+    this.loadPokemon({id: this.currentSpeciesId, lang: 9})
   }
 
 
@@ -41,23 +52,21 @@ export class PokemonDetailComponent {
     .pipe(
       take(1),
       tap( ({ data }) => {
-        const detailedPokemon: DetailedPokemon = {
-          specy: undefined,
-          pokemon: []
-        }
         //specy model builder
         const specy: Specy = {
-          id: undefined,
-          name: undefined,
-          jap_name: undefined,
-          region: undefined,
-          capture_rate: undefined,
-          base_happiness: undefined,
-          growthrate: undefined,
-          shape: undefined,
-          flavor: undefined,
-          color: undefined,
-          genera: undefined,
+          id: 0,
+          name: "",
+          jap_name: "",
+          region: "",
+          capture_rate: 0,
+          base_happiness: 0,
+          hatch_steps: 0,
+          growthrate: "",
+          gender_rate: 0,
+          shape: "",
+          flavor: "",
+          color: "",
+          genera: "",
           egg_groups: [],
           evolutions: []
         }
@@ -86,7 +95,9 @@ export class PokemonDetailComponent {
         }
         specy.capture_rate = data.specy[0].capture_rate;
         specy.base_happiness = data.specy[0].base_happiness;
+        specy.hatch_steps = (data.specy[0].hatch_counter ) * 257;
         specy.growthrate = data.specy[0].growthrate.name;
+        specy.gender_rate = data.specy[0].gender_rate;
         specy.shape = data.specy[0].shape.name;
         for (const group of data.specy[0].egg_groups) {
           specy.egg_groups?.push(group.group.name)
@@ -94,23 +105,26 @@ export class PokemonDetailComponent {
         specy.flavor = data.specy[0].flavor[0].text;
         specy.color = data.specy[0].color.name;
         specy.genera = data.specy[0].genera[0].genus;
+        const evolutions: Stage[] = [];
         for (const stage of data.specy[0].evolutions.stage) {
-          specy.evolutions?.push({name: stage.name, id: stage.id})
+          evolutions?.push({name: stage.name, id: stage.id, evolves_from: stage.evolves_from_species_id})
         }
+        specy.evolutions = formatEvolutionChain(evolutions, 'evolves_from');
         //pokemon models builder
         const pokemonArr: Pokemon[] = [];
         for (const pkmn of data.pokemon) {
           const pokemon: Pokemon = {
-            id: undefined,
-            name: undefined,
-            height: undefined,
-            weight: undefined,
-            order: undefined,
-            base_experience: undefined,
+            id: 0,
+            name: "",
+            height: 0,
+            weight: 0,
+            order: 0,
+            base_experience: 0,
             types: [],
-            debilities: [],
+            weaknesses: [],
             abilities: [],
             stats: [],
+            effort: [],
             items: [],
             moves: []
           };
@@ -123,7 +137,7 @@ export class PokemonDetailComponent {
           for (const type of pkmn.types) {
             pokemon.types?.push(type.type.name)
           }
-          pokemon.debilities = calcDebilities(pokemon.types)
+          pokemon.weaknesses = calcDebilities(pokemon.types)
           for (const ability of pkmn.abilities) {
             pokemon.abilities?.push({
               is_hidden: ability.is_hidden,
@@ -133,6 +147,11 @@ export class PokemonDetailComponent {
           }
           for (const stat of pkmn.stats) {
             pokemon.stats?.push({ name: stat.stat.name, value: stat.value });
+          }
+          for (const stat of pkmn.stats) {
+            if (stat.effort) {
+              pokemon.effort?.push({ name: stat.stat.name, value: stat.effort });
+            }
           }
           for (const item of pkmn.items) {
             pokemon.items?.push({
@@ -158,12 +177,38 @@ export class PokemonDetailComponent {
           }
           pokemonArr.push(pokemon);
         }
-        detailedPokemon.specy = specy;
-        detailedPokemon.pokemon = pokemonArr;
+        const detailedPokemon: DetailedPokemon = {
+          specy: specy,
+          pokemon: pokemonArr
+        }
         this.pokemonSubject.next(detailedPokemon)
-        switchBgByType(data.pokemon[0].types[0].type.name)
+        this.pokemon =  detailedPokemon;
+        switchBgByType(data.pokemon[0].types[0].type.name);
+        [this.pkmn_stats, this.totalStats] = pkmnStatsToArray(pokemonArr[0].stats);
+        console.log(this.pokemon)
       })
     ).subscribe();
   }
+
+  getNotHiddenAbilities(abilities: Ability[]) {
+    return abilities.filter((ability: Ability) => !ability.is_hidden);
+  }
+
+  getHiddenAbility(abilities: Ability[]) {
+    return abilities.find((ability: Ability) => ability.is_hidden);
+  }
+
+  nextStageStep(str: string, isLast: boolean): string {
+    return isLast ? '0px' : "-" + (this.getSizeFromString(str) + 250) + 'px';
+  }
+
+  prevStageStep(str: string, isFirst: boolean, size: number): string {
+    return isFirst ? "-" + (size * 250) + "px" : "-" + (this.getSizeFromString(str) - 250) + 'px';
+  }
+
+  getSizeFromString(str: string): number {
+    return parseInt(str.replace(/[^0-9]/g, ""));
+  }
+
 
 }

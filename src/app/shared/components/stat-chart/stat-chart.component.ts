@@ -15,21 +15,26 @@ export class StatChartComponent implements AfterViewInit, OnChanges {
 
   ngAfterViewInit(): void {
     this.createRadarChart();
+    this.updateRadarChart();
   }
 
   ngOnChanges(): void {
-    if (this.radarChart) {
-      this.radarChart.data.datasets[0].data = this.stats
-      this.radarChart.update();
-    }
+    this.updateRadarChart();
   }
 
-  createRadarChart() {
+  createRadarChart(): void {
     this.radarChart = new Chart(this.radarChart.nativeElement, {
       type: this.radarChartType,
       data: this.radarChartData,
       options: this.radarChartOptions
     });
+  }
+
+  updateRadarChart(): void {
+    if (this.radarChart) {
+      this.radarChart.data.datasets[0].data = this.stats
+      this.radarChart.update();
+    }
   }
 
   // Radar

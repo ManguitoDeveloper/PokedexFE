@@ -1,4 +1,4 @@
-<div class="container" *ngIf="previewPokemon$ && pokemonList$">
+<div class="container" >
   <app-side-nav [items$]="pokemonList$" [no_back]="page_info.offset == 0" [no_more]="currentPkmnInfo.id >= page_info.max - 10" (goPrev)="prevPokemon()" (goNext)="nextPokemon()" (selectPokemon)="onPokemonSelected($event)" [selected]="currentPkmnInfo.id">
   </app-side-nav>
   <section class="pkmn-content">
@@ -25,7 +25,7 @@
         <a *ngFor="let type of (previewPokemon$ | async)?.types" role="button" title="{{type | titlecase}}">
           <img  src="../../../../../assets/img/types/{{type}}.svg" alt="{{type | titlecase}}: Credits to https://www.deviantart.com/lugia-sea/art/Pokemon-Type-Icons-Vector-869706864">
         </a>
-        </div>
+      </div>
       <p class="pkmn-flavor">{{(previewPokemon$ | async)?.flavor}}</p>
       <div class="pkmn-stats">
         <div class="pkmn-graph">

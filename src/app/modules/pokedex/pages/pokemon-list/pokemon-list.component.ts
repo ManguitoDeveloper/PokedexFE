@@ -2,12 +2,13 @@ import { Component, OnInit} from '@angular/core';
 import { PokemonService } from '@services/pokemon.service';
 //models
 import { paginator, previewInfo } from '@models/paginator-variables.interface';
-import { ListedPokemon, PokemonStat, PreviewPokemon } from '@models/listed-pokemon.interface';
+import { ListedPokemon, PreviewPokemon } from '@models/listed-pokemon.interface';
 import { BehaviorSubject, take, tap } from 'rxjs';
 //environment
 import { environment } from '@environments/environment';
 //utils
 import { switchBgByType } from '@shared/utils/pokedex-bg';
+import { pkmnStatsToArray } from '@shared/utils/pokemon-utils';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -111,7 +112,7 @@ export class PokemonListComponent implements OnInit {
         }
         this.previewPokemonSubject.next(pokemon)
         switchBgByType(pokemon.types[0]);
-        this.pkmn_stats = this.pkmnStatsToArray(pokemon.stats);
+        [this.pkmn_stats, this.totalStats] = pkmnStatsToArray(pokemon.stats);
       })
     ).subscribe();
   }
@@ -137,13 +138,6 @@ export class PokemonListComponent implements OnInit {
     }
     this.listPokemon(this.page_info)
     this.loadPokemon(this.currentPkmnInfo)
-  }
-
-  pkmnStatsToArray(stats: PokemonStat[]): number[] {
-    const result: number[] = [];
-    stats.map( (stat: PokemonStat) => result.push(stat.value) );
-    this.totalStats = result.reduce((a, b) => a + b, 0);
-    return result;
   }
 
 }

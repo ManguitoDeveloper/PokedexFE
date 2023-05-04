@@ -2,10 +2,27 @@
 @use 'variables';
 @use 'texts';
 @forward 'background';
+@use 'animations';
 
 .jap-name {
   @include texts.font(japanese);
   writing-mode: vertical-lr;
   pointer-events: none;
+}
+
+.pkmn {
+
+  &-figure {
+    position: relative;
+    height: 320px;
+    .pokeball {
+      filter: invert(100%);
+      position: absolute;
+      left: 70px;
+      width: 250px;
+      opacity: .2;
+      @include animations.rotate(10s);
+    }
+  }
 }
 

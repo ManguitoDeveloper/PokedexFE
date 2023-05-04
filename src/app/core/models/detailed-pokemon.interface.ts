@@ -4,39 +4,43 @@ export interface DetailedPokemon {
 }
 
 export interface Specy {
-  id?: number
-  name?: string
-  jap_name?: string
-  region?: string
-  capture_rate?: number
-  base_happiness?: number
-  growthrate?: string
-  shape?: string
-  egg_groups?: string[]
-  flavor?: string
-  color?: string
-  genera?: string[]
-  evolutions?: Stage[]
+  id: number
+  name: string
+  jap_name: string
+  region: string
+  capture_rate: number
+  base_happiness: number
+  hatch_steps: number
+  gender_rate: number
+  growthrate: string
+  shape: string
+  egg_groups: string[]
+  flavor: string
+  color: string
+  genera: string
+  evolutions: Stage[][]
 }
 
 export interface Pokemon {
-  id?: number
-  name?: string
-  height?: number
-  weight?: number
-  order?: number
-  base_experience?: number
+  id: number
+  name: string
+  height: number
+  weight: number
+  order: number
+  base_experience: number
   types: string[]
-  debilities?: Debility[]
-  abilities?: Ability[]
-  stats?: Stat[]
-  items?: Item[]
-  moves?: Move[]
+  weaknesses: Debility[]
+  abilities: Ability[]
+  stats: Stat[]
+  effort: Stat[]
+  items: Item[]
+  moves: Move[]
 }
 
-interface Stage {
+export interface Stage {
   name: string
   id: number
+  evolves_from: number
 }
 
 interface Debility {
@@ -44,13 +48,13 @@ interface Debility {
   value: number
 }
 
-interface Ability {
+export interface Ability {
   is_hidden: boolean
   name: string
   flavor: string
 }
 
-interface Stat {
+export interface Stat {
   name: string
   value: number
 }

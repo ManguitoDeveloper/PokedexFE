@@ -25,6 +25,8 @@ export const GET_DETAILED_POKEMON = gql`
       gen: generation_id
       capture_rate
       base_happiness
+      hatch_counter
+      gender_rate
       growthrate: pokemon_v2_growthrate {
         name
       }
@@ -55,6 +57,7 @@ export const GET_DETAILED_POKEMON = gql`
         stage: pokemon_v2_pokemonspecies {
           name
           id
+          evolves_from_species_id
         }
       }
     }
@@ -85,6 +88,7 @@ export const GET_DETAILED_POKEMON = gql`
       }
       stats: pokemon_v2_pokemonstats {
         value: base_stat
+        effort
         stat: pokemon_v2_stat {
           name
         }

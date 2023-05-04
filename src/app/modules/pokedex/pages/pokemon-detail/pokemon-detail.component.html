@@ -1,2 +1,213 @@
-<p>pokemon-detail works!</p>
-<p>{{pokemon$ | async | json}}</p>
+<div class="container" *ngIf="pokemon.specy && pokemon.pokemon">
+  <div class="pkmn-title">
+    <span class="pkmn-id">#{{pokemon.specy.id | number: '3.0-0'}}</span>
+    <h1 class="pkmn-name">{{pokemon.specy.name | titlecase}}</h1>
+    <p class="pkmn-genera">{{pokemon.specy.genera | titlecase}}</p>
+  </div>
+  <section class="pkmn-figure">
+    <object data="../../../../../assets/img/pokeball.svg" class="pokeball"></object>
+    <p class="jap-name">{{pokemon.specy!.jap_name }}</p>
+    <img src="{{'pkmn_img_path' | env}}{{pokemon.pokemon[currentPokemonIndex].id}}.png" class="pkmn-img"
+      alt="{{pokemon.pokemon[0].name | titlecase}}">
+    <div class="pkmn-types">
+      <a *ngFor="let type of pokemon.pokemon[currentPokemonIndex].types" role="button" title="{{type | titlecase}}">
+        <img src="../../../../../assets/img/types/{{type}}.svg"
+          alt="{{type | titlecase}}: Credits to https://www.deviantart.com/lugia-sea/art/Pokemon-Type-Icons-Vector-869706864">
+      </a>
+    </div>
+  </section>
+  <p class="pkmn-flavor">{{pokemon.specy.flavor}}</p>
+  <section class="pkmn-basic">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">
+            Basic Data
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Height</td>
+          <td>{{pokemon.pokemon[currentPokemonIndex].height}}m</td>
+        </tr>
+        <tr>
+          <td>Weigth</td>
+          <td>{{pokemon.pokemon[currentPokemonIndex].weight}}kg</td>
+        </tr>
+        <tr>
+          <td>Color</td>
+          <td>{{pokemon.specy.color | titlecase}}</td>
+        </tr>
+        <tr>
+          <td>Shape</td>
+          <td>{{pokemon.specy.shape | titlecase}}</td>
+        </tr>
+        <tr>
+          <td>Region</td>
+          <td>{{pokemon.specy.region}}</td>
+        </tr>
+        <tr>
+          <td>Abilities</td>
+          <td>
+            <p *ngFor="let ability of getNotHiddenAbilities(pokemon.pokemon[currentPokemonIndex].abilities)"
+              title="{{ability.flavor}}">{{ability.name | titlecase}}</p>
+            <p title="{{getHiddenAbility(pokemon.pokemon[currentPokemonIndex].abilities)!.flavor}}">
+              {{getHiddenAbility(pokemon.pokemon[currentPokemonIndex].abilities)!.name | titlecase}}
+              <small>[hidden]</small></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">
+            Breeding
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Egg Group</td>
+          <td>
+            <p *ngFor="let group of pokemon.specy.egg_groups">{{group | titlecase}}</p>
+          </td>
+        </tr>
+        <tr>
+          <td>Gender Rate</td>
+          <td>
+            <p>{{(8 - pokemon.specy.gender_rate) / 8 * 100}}% <ng-icon class="icon" name="cssGenderMale"
+                [size]="'16px'"></ng-icon></p>
+            <p>{{pokemon.specy.gender_rate / 8 * 100}}% <ng-icon class="icon" name="cssGenderFemale"
+                [size]="'16px'"></ng-icon></p>
+          </td>
+        </tr>
+        <tr>
+          <td>Hatch steps</td>
+          <td>{{pokemon.specy.hatch_steps}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">
+            Training
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>EV Yield</td>
+          <td>
+            <p *ngFor="let stat of pokemon.pokemon[currentPokemonIndex].effort">+{{stat.value}} {{stat.name |
+              titlecase}}</p>
+          </td>
+        </tr>
+        <tr>
+          <td>Catch rate</td>
+          <td>{{pokemon.specy.capture_rate}}kg</td>
+        </tr>
+        <tr>
+          <td>Base Friendship</td>
+          <td>{{pokemon.specy.base_happiness}}</td>
+        </tr>
+        <tr>
+          <td>Base Experience</td>
+          <td>{{pokemon.pokemon[currentPokemonIndex].base_experience}}</td>
+        </tr>
+        <tr>
+          <td>Growth Rate</td>
+          <td>{{pokemon.specy.growthrate | titlecase}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section *ngIf="pkmn_stats" class="pkmn-stats">
+    <app-stat-chart [stats]="pkmn_stats"></app-stat-chart>
+    <table>
+      <tbody>
+        <tr *ngFor="let stat of pokemon.pokemon[currentPokemonIndex].stats">
+          <td>{{stat.name | titlecase}}</td>
+          <td>{{stat.value}}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Total</td>
+          <td>{{totalStats}}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+  <section class="pkmn-weaknesses">
+    <p class="title">
+      Weaknesses
+    </p>
+    <div class="item" *ngFor="let stat of pokemon.pokemon[currentPokemonIndex].weaknesses">
+      <a title="{{stat.type}}">
+        <img src="../../../../../assets/img/types/sq-{{stat.type}}.svg" alt="{{stat.type}}">
+      </a>
+      <div class="multiplier"
+        [ngClass]="{'weak': stat.value === 2, 'strong': stat.value === 0.5, 'neutral': stat.value === 1, 'inmune': stat.value === 0, 'super_weak': stat.value === 4 }">
+        <span>x{{stat.value}}</span>
+      </div>
+    </div>
+  </section>
+  <section class="pkmn-evolutions">
+    <p class="title">
+      Evolution Line
+    </p>
+    <div class="groups"
+      [ngClass]="{'one-stage': pokemon.specy.evolutions.length === 1, 'two-stages': pokemon.specy.evolutions.length === 2,'three-stages': pokemon.specy.evolutions.length === 3}">
+      <div class="group one">
+        <div class="forms" style="top: 0px">
+          <div class="form" *ngFor="let stage of pokemon.specy.evolutions[0]">
+            <a title="{{stage.name | titlecase}}" routerLink="../{{stage.id}}">
+              <div class="stage">
+                <img src="{{'pkmn_img_path' | env}}{{stage.id}}.png" alt="{{stage.name}}"
+                  [ngClass]="{'filtered': ''+stage.id !== currentSpeciesId}">
+                <p>{{stage.name | titlecase}}</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="group two" [ngClass]="{'hidden': !(pokemon.specy.evolutions.length > 1)}">
+        <div class="forms" #secondEl style="top: 0px">
+          <div class="form" *ngFor="let stage of pokemon.specy.evolutions[1]">
+            <a title="{{stage.name | titlecase}}" routerLink="../{{stage.id}}">
+              <div class="stage">
+                <img src="{{'pkmn_img_path' | env}}{{stage.id}}.png" alt="{{stage.name}}"
+                  [ngClass]="{'filtered': ''+stage.id !== currentSpeciesId}">
+                <p>{{stage.name | titlecase}}</p>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div *ngIf="pokemon.specy.evolutions[1]">
+          <button class="next" *ngIf="pokemon.specy.evolutions[1].length != 1" (click)="secondEl.style.top = nextStageStep(secondEl.style.top, (getSizeFromString(secondEl.style.top) / 250) === pokemon.specy.evolutions[1].length - 1)"><ng-icon class="icon" name="cssArrowDown" [size]="'24px'"></ng-icon></button>
+          <button class="prev" *ngIf="pokemon.specy.evolutions[1].length != 1" (click)="secondEl.style.top = prevStageStep(secondEl.style.top, (getSizeFromString(secondEl.style.top) / 250) === 0, pokemon.specy.evolutions[1].length - 1)"><ng-icon class="icon" name="cssArrowUp" [size]="'24px'"></ng-icon></button>
+        </div>
+      </div>
+      <div class="group three" [ngClass]="{'hidden':  !(pokemon.specy.evolutions.length > 2)}">
+        <div class="forms" #thirdEl style="top: 0px">
+          <div class="form" *ngFor="let stage of pokemon.specy.evolutions[2]">
+            <a title="{{stage.name | titlecase}}" routerLink="../{{stage.id}}">
+              <div class="stage">
+                <img src="{{'pkmn_img_path' | env}}{{stage.id}}.png" alt="{{stage.name}}"
+                  [ngClass]="{'filtered': ''+stage.id !== currentSpeciesId}">
+                <p>{{stage.name | titlecase}}</p>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div *ngIf="pokemon.specy.evolutions[2]">
+          <button class="prev" *ngIf="pokemon.specy.evolutions[2].length != 1" (click)="thirdEl.style.top = prevStageStep(thirdEl.style.top, (getSizeFromString(thirdEl.style.top) / 250) === 0, pokemon.specy.evolutions[2].length - 1)"><ng-icon class="icon" name="cssArrowUp" [size]="'24px'"></ng-icon></button>
+          <button class="next" *ngIf="pokemon.specy.evolutions[2].length != 1" (click)="thirdEl.style.top = nextStageStep(thirdEl.style.top, (getSizeFromString(thirdEl.style.top) / 250) === pokemon.specy.evolutions[2].length - 1)"><ng-icon class="icon" name="cssArrowDown" [size]="'24px'"></ng-icon></button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

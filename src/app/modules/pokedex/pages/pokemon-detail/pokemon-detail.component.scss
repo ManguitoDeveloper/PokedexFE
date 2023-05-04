@@ -1,0 +1,330 @@
+@use 'variables' as *;
+@use 'mixins';
+@use 'texts' as *;
+@use 'devices' as *;
+
+.container {
+
+  display: grid;
+  grid-template-columns: 1fr;
+
+  section {
+    table {
+      width: 100%;
+      border-spacing: 0;
+
+      th {
+        text-align: left;
+        @include font(title);
+        font-size: nth($fontSizes, 4);
+      }
+
+      td,
+      th {
+        width: 50%;
+        @include mixins.padding-x(nth($spacing, 2));
+
+        small {
+          font-size: nth($fontSizes, 2);
+        }
+      }
+
+      tbody {
+        tr {
+          &:nth-of-type(2n + 1) {
+            td {
+              background-color: rgba(white, .1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .jap-name {
+    position: absolute;
+    opacity: .6;
+    font-size: nth($fontSizes, 7);
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+  }
+
+  .pkmn {
+
+    &-id,
+    &-name {
+      font-weight: 700;
+    }
+
+    &-id {
+      font-size: nth($fontSizes, 3);
+    }
+
+    &-name {
+      font-size: nth($fontSizes, 4);
+      line-height: 16px;
+    }
+
+    &-genera {
+      font-size: nth($fontSizes, 2);
+    }
+
+    &-img {
+      width: 250px;
+      position: absolute;
+      bottom: -10px;
+    }
+
+    &-types {
+      position: absolute;
+      @include mixins.flexbox(row, initial, initial);
+      top: 0;
+      right: 0;
+      img {
+        width: 50px;
+      }
+    }
+
+    &-basic {
+      display: grid;
+      row-gap: nth($spacing, 4);
+    }
+
+    &-stats {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 240px 1fr;
+    }
+
+    &-weaknesses {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: nth($spacing, 3);
+      height: fit-content;
+
+      .item {
+        aspect-ratio: 2/1;
+        cursor: default;
+
+        &>* {
+          aspect-ratio: 1;
+        }
+
+        .multiplier {
+          margin-top: nth($spacing, 2);
+          display: grid;
+          place-items: center;
+          border-radius: 35% / 20px;
+
+          span {
+            @include font(title);
+          }
+
+          &.neutral {
+            background-color: rgba(white, .25);
+          }
+
+          &.strong {
+            background-color: rgba(crimson, .25);
+          }
+
+          &.weak {
+            background-color: rgba(green, .25);
+          }
+
+          &.inmune {
+            background-color: rgba(black, .25);
+          }
+
+          &.super_weak {
+            background-color: rgba(lime, .25);
+          }
+        }
+      }
+    }
+
+    &-evolutions {
+      .groups {
+        display: grid;
+        .form {
+          height: 250px;
+        }
+        &.one-stage {
+          grid-template-columns: 300px;
+          grid-template-rows: 300px;
+          .form {
+            height: 300px;
+          }
+        }
+        &.two-stages {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 250px;
+        }
+        &.three-stages {
+          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-rows: 250px;
+        }
+        .group {
+          position: relative;
+          overflow: hidden;
+          button {
+            position: absolute;
+            &.next {
+              bottom: 0;
+              right: nth($spacing, 3 );
+            }
+            &.prev {
+              top: 0;
+              left: nth($spacing, 3 );
+            }
+          }
+          &.hidden {
+            display: none;
+          }
+          .forms {
+            position: relative;
+            transition: all .4s ease;
+            .form {
+              .stage {
+                padding: nth($spacing, 2);
+                display: grid;
+                place-items: center;
+                height: 100%;
+                img {
+                  width: 70%;
+                }
+                p {
+                  @include font(title);
+                  font-size: nth($fontSizes, 4 );
+                  margin-top: nth($spacing, 2 );
+                }
+                .filtered {
+                  filter: grayscale(.6);
+                  transition: all .2s ease-in-out;
+                  &:hover {
+                    filter: grayscale(0);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &-weaknesses,
+    &-evolutions {
+      .title {
+        font-size: nth($fontSizes, 4);
+        grid-column: span 9;
+        @include font(title);
+      }
+    }
+  }
+
+
+  @include device(nth($breakpoints, 1)) {
+
+    grid-template-columns: 460px 1fr 1fr 1fr;
+    grid-template-rows: auto 68px 240px auto;
+    column-gap: nth($spacing, 6);
+    row-gap: nth($spacing, 6);
+
+    section {
+      table {
+        th {
+          font-size: nth($fontSizes, 5);
+        }
+
+        td,
+        th {
+          @include mixins.padding-x(nth($spacing, 3))
+        }
+      }
+    }
+
+    .jap-name {
+      font-size: nth($fontSizes, 8);
+      left: 30px;
+    }
+
+    .pkmn {
+
+      &-title {
+        grid-column: span 4;
+      }
+
+      &-id {
+        font-size: nth($fontSizes, 4);
+      }
+
+      &-name {
+        font-size: nth($fontSizes, 6);
+        line-height: 30px;
+      }
+
+      &-genera {
+        font-size: nth($fontSizes, 3);
+      }
+
+      &-img {
+        width: 340px;
+        bottom: -20px;
+        left: 70px;
+      }
+
+      &-figure {
+        height: 340px;
+        grid-row: span 2;
+
+        .pokeball {
+          left: 150px;
+          width: 300px;
+        }
+      }
+
+      &-flavor {
+        grid-column: span 2;
+      }
+
+      &-basic {
+        grid-row: span 3;
+      }
+
+      &-stats {
+        grid-column: span 2;
+        grid-template-columns: 240px 1fr;
+        grid-template-rows: 1fr;
+        column-gap: nth($spacing, 3);
+
+        tbody {
+          tr {
+            &:nth-last-child(1) {
+              td {
+                border-bottom: solid 1px rgba(white, .4);
+              }
+            }
+          }
+        }
+
+        tfoot {
+          background-color: rgba(black, .05);
+        }
+      }
+
+      &-weaknesses,
+      &-evolutions {
+        .title {
+          font-size: nth($fontSizes, 5);
+        }
+      }
+
+      &-evolutions {
+        grid-column: span 2;
+      }
+
+    }
+
+  }
+}
