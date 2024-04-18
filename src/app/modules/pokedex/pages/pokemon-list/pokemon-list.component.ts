@@ -49,17 +49,6 @@ export class PokemonListComponent implements OnInit {
     this.loadPokemon(this.currentPkmnInfo);
   }
 
-  // listPokemon(props : paginator): void {
-  //   this.pokemonService.getPokemonListResults( props )
-  //   .pipe(
-  //     take(1),
-  //     tap( ({ data }) => {
-  //       const { species } = data;
-  //       this.pokemonListSubject.next(species)
-  //     })
-  //   ).subscribe();
-  // }
-
   listPokemon(props: paginator): void {
     this.pokemonService
       .getPokemonListResults(props)
