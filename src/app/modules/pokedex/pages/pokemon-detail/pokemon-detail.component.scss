@@ -102,6 +102,7 @@
       grid-template-columns: repeat(9, 1fr);
       gap: nth($spacing, 3);
       height: fit-content;
+      align-items: center;
 
       .item {
         aspect-ratio: 2/1;
